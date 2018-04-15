@@ -15,8 +15,8 @@ import java.util.Map;
 import com.x.framework.model.BaseObject;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.directwebremoting.WebContextFactory;
-import org.directwebremoting.io.FileTransfer;
+//import org.directwebremoting.WebContextFactory;
+//import org.directwebremoting.io.FileTransfer;
 
 import java.text.ParseException;
 
@@ -232,7 +232,6 @@ public abstract class Base {
      * @param fileUrl    String 上传路劲
      * @param fileName   String 文件名
      * @return String
-     */
     public String uploadFile(FileTransfer uploadFile, String fileUrl, String fileName) throws Exception {
         if (uploadFile != null && uploadFile.getSize() > 0) {
             fileUrl = getRealPath(fileUrl);
@@ -258,22 +257,21 @@ public abstract class Base {
             return null;
         }
     }
+     */
 
     /**
      * 返回 web root 下的某个目录
      *
      * @param dir String
      * @return String
-     */
     public String getRealPath(String dir) {
         return WebContextFactory.get().getServletContext().getRealPath(dir);
     }
-
+     */
     /**
      * 根据目录名地址删除目录及其所有文件
      *
      * @param str String
-     */
     public void delDir(String str) {
         str = getRealPath(str);
         File dir = new File(str);
@@ -289,13 +287,13 @@ public abstract class Base {
             dir.delete();
         }
     }
+     */
 
     /**
      * 根据目录和文件名删除文件
      *
      * @param dir      String
      * @param fileName String
-     */
     public void deleteFile(String dir, String fileName) {
         dir = getRealPath(dir);
         File file = new File(dir, fileName);
@@ -303,6 +301,7 @@ public abstract class Base {
             file.delete();
         }
     }
+     */
 
     /**
      * 通过反射获取静态变量值
