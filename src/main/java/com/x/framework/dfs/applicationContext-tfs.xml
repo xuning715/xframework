@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:p="http://www.springframework.org/schema/p"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	                       http://www.springframework.org/schema/beans/spring-beans.xsd
+		                   http://www.springframework.org/schema/context 
+		                   http://www.springframework.org/schema/context/spring-context.xsd">
+		
+    
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	   <property name="locations" value="classpath:tfs.properties" />
+    </bean>
+
+	<!-- TFS连接池 start -->
+	<bean id="defaultTfsManager" class="com.taobao.common.tfs.DefaultTfsManager"
+		init-method="init">
+		<!-- 整个进程中系统最多等待多少个请求,取决于你有多少个线程并发的请求TFS -->
+		<property name="maxWaitThread" value="${tfs.maxWaitThread}" />
+
+		<!-- 单个请求最大的等待时间(ms) 超过这个时间放弃这次请求 -->
+		<property name="timeout" value="${tfs.timeout}" />
+
+		<!-- Tfs master nameserver ip address -->
+		<property name="nsip" value="${tfs.nsip}" />
+
+		<!-- TFS 集群的编号,这个编号只是一种参考,系统初始化的时候会从ns上取,取不到才用本地设置的.! -->
+		<property name="tfsClusterIndex" value="${tfs.tfsClusterIndex}" />
+
+		<!-- TFS在读取文件的时候会缓存block所在的数据服务器ip,这个参数配置了最多缓存的记录个数! -->
+		<property name="maxCacheItemCount" value="${tfs.maxCacheItemCount}" />
+
+		<!-- 上一项缓存最大有效的时间(ms)! -->
+		<property name="maxCacheTime" value="${tfs.maxCacheTime}" />
+	</bean>
+	<!-- TFS连接池 end -->
+	<bean id="tfsService" class="com.x.framework.dfs.TfsClient">
+		<property name="defaultTfsManager" ref="defaultTfsManager"></property>
+	</bean>
+</beans>
