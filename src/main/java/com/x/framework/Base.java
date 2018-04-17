@@ -272,6 +272,7 @@ public abstract class Base {
      * 根据目录名地址删除目录及其所有文件
      *
      * @param str String
+     */
     public void delDir(String str) {
         str = getRealPath(str);
         File dir = new File(str);
@@ -287,13 +288,13 @@ public abstract class Base {
             dir.delete();
         }
     }
-     */
 
     /**
      * 根据目录和文件名删除文件
      *
      * @param dir      String
      * @param fileName String
+     */
     public void deleteFile(String dir, String fileName) {
         dir = getRealPath(dir);
         File file = new File(dir, fileName);
@@ -301,7 +302,6 @@ public abstract class Base {
             file.delete();
         }
     }
-     */
 
     /**
      * 通过反射获取静态变量值
