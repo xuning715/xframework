@@ -59,21 +59,19 @@ public class ModelMap {
 
 				mappingFieldList.add(mappingField);
 				columnFieldMap.put(mappingField.getColumnName(), mappingField.getFieldName());
-			} else {
-				if (field.isAnnotationPresent(MappingTable.class)) {
-					mappingTable = field.getAnnotation(MappingTable.class);
-					String key = mappingTable.tableName();
-					if (!tableModelMap.containsKey(key)) {
-						tableModelMap.put(key, key);
-						MappingModel mappingModelField;
-						if (BaseObject.class.isAssignableFrom(type)) {
-							mappingModelField = getClassMappingModel(type, mappingModelList, columnFieldMap, tableModelMap);
-							mappingModelField.setFieldName(fieldName);
-							mappingModelList.add(mappingModelField);
+			} else if (field.isAnnotationPresent(MappingTable.class)) {
+				mappingTable = field.getAnnotation(MappingTable.class);
+				String key = mappingTable.tableName();
+				if (!tableModelMap.containsKey(key)) {
+					tableModelMap.put(key, key);
+					MappingModel mappingModelField;
+					if (BaseObject.class.isAssignableFrom(type)) {
+						mappingModelField = getClassMappingModel(type, mappingModelList, columnFieldMap, tableModelMap);
+						mappingModelField.setFieldName(fieldName);
+						mappingModelList.add(mappingModelField);
 //						} else {
 //							type = mappingTable.modelClass();
 //							mappingModelField = getClassMappingModel(type, mappingModelList, columnFieldMap, tableModelMap);
-						}
 					}
 				}
 			}

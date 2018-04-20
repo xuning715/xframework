@@ -105,10 +105,11 @@ public class RedisAspect {
     public void afterReturnRedisRemove(BaseObject arg) {
         try {
             MappingModel<? extends BaseObject> mappingModel = ModelMap.getMappingModel(arg.getClass());
-            logger.info("====afterReturnRedisRemove====================tableName===" + arg.getClass());
             // 删除前缀的所有集合
+            logger.info("====afterReturnRedisRemove====================className===" + arg.getClass());
             Map<String, String> tableNameMap = mappingModel.getTableModelMap();
             for (String tableName : tableNameMap.keySet()) {
+                logger.info("====afterReturnRedisRemove====================tableName===" + tableName);
                 xRedisTemplate.deleteAopObject(tableName);
             }
         } catch (Throwable e) {
