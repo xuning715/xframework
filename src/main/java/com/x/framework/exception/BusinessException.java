@@ -14,8 +14,8 @@ public class BusinessException extends RuntimeException {
         super();
     }
 
-    public BusinessException(String messeage) {
-        super(messeage);
+    public BusinessException(String message) {
+        super(message);
     }
 
     public BusinessException(Throwable e) {
@@ -23,8 +23,8 @@ public class BusinessException extends RuntimeException {
         logger.error(null, e);
     }
 
-    public BusinessException(String messeage, Throwable e) {
-        super(messeage);
-        logger.error(messeage, e);
+    public BusinessException(String message, Throwable e) {
+        super(message);
+        logger.error(message, e);
     }
 }

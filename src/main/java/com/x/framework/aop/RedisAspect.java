@@ -43,77 +43,58 @@ public class RedisAspect {
         this.expireSeconds = expireSeconds;
     }
 
-    public Object aroundRedisGet(ProceedingJoinPoint point) {
-        Object value = null;
-        try {
-            Object[] args = point.getArgs();
-            if (args == null || args.length == 0) {
-                throw new Exception("args is null");
-            }
-            String className = point.getTarget().toString();
-            Signature signature = point.getSignature();
-            MethodSignature methodSignature = (MethodSignature) signature;
-            Method method = methodSignature.getMethod();
-            Annotation[][] paramAnnotations = method.getParameterAnnotations();
-            String key = className.substring(className.lastIndexOf(DOT) + 1, className.indexOf(AT)) + signature.getName();
-            int i = 0;
-            MappingTable mappingTable;
-            String argJson;
-            for (Object arg : args) {
-                argJson = arg == null ? BLANK : JSON.toJSONString(arg);
-                if (paramAnnotations[i].length == 0 || !paramAnnotations[i][0].annotationType().equals(NotKey.class)) {
-                    if (i == 0) {
-                        if (!(BaseObject.class.isInstance(arg))) {
-                            throw new Exception("arg0 is not instance of BaseObject");
-                        }
-                        mappingTable = arg.getClass().getAnnotation(MappingTable.class);
-                        if (mappingTable == null) {
-                            throw new Exception("arg0's mappingTable annotation is null");
-                        }
-                        key = mappingTable.tableName().toUpperCase() + key + argJson;
-                    } else {
-                        key += argJson;
+    public Object aroundRedisGet(ProceedingJoinPoint point) throws Throwable {
+        Object[] args = point.getArgs();
+        if (args == null || args.length == 0) {
+            throw new Exception("args is null");
+        }
+        String className = point.getTarget().toString();
+        Signature signature = point.getSignature();
+        MethodSignature methodSignature = (MethodSignature) signature;
+        Method method = methodSignature.getMethod();
+        Annotation[][] paramAnnotations = method.getParameterAnnotations();
+        String key = className.substring(className.lastIndexOf(DOT) + 1, className.indexOf(AT)) + signature.getName();
+        int i = 0;
+        MappingTable mappingTable;
+        String argJson;
+        for (Object arg : args) {
+            argJson = arg == null ? BLANK : JSON.toJSONString(arg);
+            if (paramAnnotations[i].length == 0 || !paramAnnotations[i][0].annotationType().equals(NotKey.class)) {
+                if (i == 0) {
+                    if (!(BaseObject.class.isInstance(arg))) {
+                        throw new Exception("arg0 is not instance of BaseObject");
                     }
+                    mappingTable = arg.getClass().getAnnotation(MappingTable.class);
+                    if (mappingTable == null) {
+                        throw new Exception("arg0's mappingTable annotation is null");
+                    }
+                    key = mappingTable.tableName().toUpperCase() + key + argJson;
+                } else {
+                    key += argJson;
                 }
-                i++;
             }
-            key = key.replaceAll(QUOTE, BLANK).replaceAll(LEFTRIGHTBRACKETS, BLANK).replaceAll(RIGHTLEFTBRACKETS, MINUS).replaceAll(LEFTBRACKET, MINUS).replaceAll(RIGHTBRACKET, MINUS);
+            i++;
+        }
+        key = key.replaceAll(QUOTE, BLANK).replaceAll(LEFTRIGHTBRACKETS, BLANK).replaceAll(RIGHTLEFTBRACKETS, MINUS).replaceAll(LEFTBRACKET, MINUS).replaceAll(RIGHTBRACKET, MINUS);
 //            Class<?> returnType = methodSignature.getReturnType();
-            logger.info("====aroundRedisGet====key===" + key);
+        logger.info("====aroundRedisGet====key===" + key);
 
-            value = xRedisTemplate.getAopObject(key, expireSeconds);
-            if (value == null) {
-                value = point.proceed();
-                xRedisTemplate.setAopObject(key, value, expireSeconds);
-            }
-
-//			String json = aopRedis.get(key, expireSeconds);
-//			if (json == null) {
-//				value = point.proceed();
-//                aopRedis.set(key, value, expireSeconds);
-//
-//				logger.info("====aroundRedisGet====================edisFactory.save(key, value)===");
-//			} else {
-//                value = JSON.parseObject(json, returnType);
-//			}
-        } catch (Throwable e) {
-            logger.error("aroundRedisGet exception : ", e);
+        Object value = xRedisTemplate.getAopObject(key, expireSeconds);
+        if (value == null) {
+            value = point.proceed();
+            xRedisTemplate.setAopObject(key, value, expireSeconds);
         }
         return value;
     }
 
     public void afterReturnRedisRemove(BaseObject arg) {
-        try {
-            MappingModel<? extends BaseObject> mappingModel = ModelMap.getMappingModel(arg.getClass());
-            // 删除前缀的所有集合
-            logger.info("====afterReturnRedisRemove====================className===" + arg.getClass());
-            Map<String, String> tableNameMap = mappingModel.getTableModelMap();
-            for (String tableName : tableNameMap.keySet()) {
-                logger.info("====afterReturnRedisRemove====================tableName===" + tableName);
-                xRedisTemplate.deleteAopObject(tableName);
-            }
-        } catch (Throwable e) {
-            logger.error("afterReturnRedisRemove exception : ", e);
+        MappingModel<? extends BaseObject> mappingModel = ModelMap.getMappingModel(arg.getClass());
+        // 删除前缀的所有集合
+        logger.info("====afterReturnRedisRemove====================className===" + arg.getClass());
+        Map<String, String> tableNameMap = mappingModel.getTableModelMap();
+        for (String tableName : tableNameMap.keySet()) {
+            logger.info("====afterReturnRedisRemove====================tableName===" + tableName);
+            xRedisTemplate.deleteAopObject(tableName);
         }
     }
 
@@ -175,7 +156,7 @@ public class RedisAspect {
         // + point.getSignature().getName());
     }
 
-    public static void main(String[] arg){
+    public static void main(String[] arg) {
         System.out.println(LEFTBRACKET);
         System.out.println(LEFTRIGHTBRACKETS);
         System.out.println(RIGHTBRACKET);
