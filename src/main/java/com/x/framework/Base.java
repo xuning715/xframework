@@ -12,7 +12,6 @@ import java.util.Calendar;
 import java.util.Random;
 import java.util.Map;
 
-import com.x.framework.model.BaseObject;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.directwebremoting.WebContextFactory;
@@ -324,7 +323,7 @@ public abstract class Base {
      * @param clazz Class
      * @return T
      */
-    public <T extends BaseObject> T mapToModel(Map<String, Object> map, Class<T> clazz) {
+    public <T extends Object> T mapToModel(Map<String, Object> map, Class<T> clazz) {
         T model = null;
         try {
             model = clazz.newInstance();

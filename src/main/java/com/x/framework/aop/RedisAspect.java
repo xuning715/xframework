@@ -23,7 +23,6 @@ import java.util.Map;
 
 @Service
 public class RedisAspect {
-    private static final Logger logger = LogManager.getLogger(RedisAspect.class);
 
     private final static String BLANK = "";
     private final static String DOT = ".";
@@ -77,7 +76,7 @@ public class RedisAspect {
         }
         key = key.replaceAll(QUOTE, BLANK).replaceAll(LEFTRIGHTBRACKETS, BLANK).replaceAll(RIGHTLEFTBRACKETS, MINUS).replaceAll(LEFTBRACKET, MINUS).replaceAll(RIGHTBRACKET, MINUS);
 //            Class<?> returnType = methodSignature.getReturnType();
-        logger.info("====aroundRedisGet====key===" + key);
+        System.out.println("====aroundRedisGet====key===" + key);
 
         Object value = xRedisTemplate.getAopObject(key, expireSeconds);
         if (value == null) {
@@ -90,10 +89,10 @@ public class RedisAspect {
     public void afterReturnRedisRemove(BaseObject arg) {
         MappingModel<? extends BaseObject> mappingModel = ModelMap.getMappingModel(arg.getClass());
         // 删除前缀的所有集合
-        logger.info("====afterReturnRedisRemove====================className===" + arg.getClass());
+        System.out.println("====afterReturnRedisRemove====================className===" + arg.getClass());
         Map<String, String> tableNameMap = mappingModel.getTableModelMap();
         for (String tableName : tableNameMap.keySet()) {
-            logger.info("====afterReturnRedisRemove====================tableName===" + tableName);
+            System.out.println("====afterReturnRedisRemove====================tableName===" + tableName);
             xRedisTemplate.deleteAopObject(tableName);
         }
     }
@@ -101,7 +100,7 @@ public class RedisAspect {
     public void beforeLog(JoinPoint point) {
         String methodName = point.getSignature().getName();
         Object[] args = point.getArgs();
-        logger.info(methodName + args);
+        System.out.println(methodName + args);
     }
 
     public void aroundQuartz(ProceedingJoinPoint point) {
@@ -150,8 +149,8 @@ public class RedisAspect {
     public void afterReturnXxx(BaseObject arg, List<BaseObject> list) {
         MappingTable mappingTable = arg.getClass().getAnnotation(MappingTable.class);
         String tableName = mappingTable.tableName().toUpperCase();
-        logger.info("====afterReturnRedisSave====================tableName===" + tableName);
-        logger.info("====afterReturnRedisSave====================list===" + list.size());
+        System.out.println("====afterReturnRedisSave====================tableName===" + tableName);
+        System.out.println("====afterReturnRedisSave====================list===" + list.size());
         // logger.info("====RedisUtil=================redisSave===point.getSignature().getName()==="
         // + point.getSignature().getName());
     }

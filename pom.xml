@@ -40,6 +40,12 @@
 			<version>4.0.0</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.x</groupId>
+			<artifactId>xframework-api</artifactId>
+			<version>1.0-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<distributionManagement>
