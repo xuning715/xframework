@@ -1,14 +1,13 @@
 package com.x.framework.aop;
 
 import com.alibaba.fastjson.JSON;
+import com.x.framework.Base;
 import com.x.framework.annotation.MappingTable;
 import com.x.framework.annotation.NotKey;
 import com.x.framework.model.BaseObject;
 import com.x.framework.model.MappingModel;
 import com.x.framework.model.ModelMap;
 import com.x.framework.redis.XRedisTemplate;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -24,7 +23,6 @@ import java.util.Map;
 @Service
 public class RedisAspect {
 
-    private final static String BLANK = "";
     private final static String DOT = ".";
     private final static String AT = "@";
     private final static String QUOTE = "\"";
@@ -57,7 +55,7 @@ public class RedisAspect {
         MappingTable mappingTable;
         String argJson;
         for (Object arg : args) {
-            argJson = arg == null ? BLANK : JSON.toJSONString(arg);
+            argJson = arg == null ? Base.BLANK : JSON.toJSONString(arg);
             if (paramAnnotations[i].length == 0 || !paramAnnotations[i][0].annotationType().equals(NotKey.class)) {
                 if (i == 0) {
                     if (!(BaseObject.class.isInstance(arg))) {
@@ -74,7 +72,7 @@ public class RedisAspect {
             }
             i++;
         }
-        key = key.replaceAll(QUOTE, BLANK).replaceAll(LEFTRIGHTBRACKETS, BLANK).replaceAll(RIGHTLEFTBRACKETS, MINUS).replaceAll(LEFTBRACKET, MINUS).replaceAll(RIGHTBRACKET, MINUS);
+        key = key.replaceAll(QUOTE, Base.BLANK).replaceAll(LEFTRIGHTBRACKETS, Base.BLANK).replaceAll(RIGHTLEFTBRACKETS, MINUS).replaceAll(LEFTBRACKET, MINUS).replaceAll(RIGHTBRACKET, MINUS);
 //            Class<?> returnType = methodSignature.getReturnType();
         System.out.println("====aroundRedisGet====key===" + key);
 

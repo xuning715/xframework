@@ -21,7 +21,7 @@ import java.text.ParseException;
 
 public abstract class Base {
     private final static String SPACE = "　| ";
-    private final static String BLANK = "";
+    public final static String BLANK = "";
     private final static String DOT = ".";
     private final static String YYMMDDHHMMSS = "yyMMddHHmmss";
 

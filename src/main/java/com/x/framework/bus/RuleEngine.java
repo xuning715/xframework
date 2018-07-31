@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.x.framework.Base;
 import com.x.framework.model.BaseObject;
 import org.apache.commons.jexl2.Expression;
 import org.apache.commons.jexl2.JexlContext;
@@ -19,7 +20,6 @@ import javax.script.ScriptEngineManager;
 
 public class RuleEngine {
     private final static String js = "js";
-    private final static String blank = "";
 
     public static boolean validateRule(BaseObject obj, List<String> rules) throws Exception {
         Map<String, Object> map = transBean2Map(obj);
@@ -39,7 +39,7 @@ public class RuleEngine {
 
     public static boolean validateRule(Map<String, Object> map, String rule) throws Exception {
         for (Map.Entry<String, Object> entry : map.entrySet()) {
-            rule = rule.replaceAll(entry.getKey(), entry.getValue() + blank);
+            rule = rule.replaceAll(entry.getKey(), entry.getValue() + Base.BLANK);
         }
         return evalRule(rule, Boolean.class);
     }

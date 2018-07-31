@@ -6,16 +6,15 @@ import com.x.framework.model.MappingField;
 import com.x.framework.model.MappingModel;
 import com.x.framework.model.ModelMap;
 import org.apache.commons.beanutils.BeanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.apache.log4j.Logger;
-import org.apache.log4j.LogManager;
 
 import com.x.framework.Base;
 
 import org.springframework.jdbc.core.CallableStatementCallback;
-import org.springframework.dao.DataAccessException;
 
 import java.lang.reflect.Field;
 import java.sql.*;
@@ -23,7 +22,7 @@ import java.util.*;
 import java.util.Date;
 
 public class XJdbcTemplate {
-	private static final Logger logger = LogManager.getLogger(XJdbcTemplate.class);
+	private static final Logger logger = LoggerFactory.getLogger(XJdbcTemplate.class);
 	private static final String DATABASE_TYPE_ORACLE = "ORACLE";
 	private static final String DATABASE_TYPE_MYSQL = "MYSQL";
 	private static final String JAVA_LANG_STRING = "java.lang.String";
@@ -45,7 +44,6 @@ public class XJdbcTemplate {
 	private static final String AUTO = "AUTO";
 	private static final String SEQ = "SEQ";
 	private static final String SYSDATE = "SYSDATE";
-	private static final String BLANK = "";
 	private static final String SPACE = " ";
 	private static final String SELECT_PAGE_BEGIN_ORACLE = "SELECT * FROM (SELECT ROW_.*, rownum ROWNUM_ FROM (";
 	private static final String SELECT_PAGE_END_ORACLE = ") ROW_) WHERE ROWNUM_ > ? AND ROWNUM_ <= ?";
@@ -285,8 +283,8 @@ public class XJdbcTemplate {
 		model = this.setModelPkFieldValue(model);
 		String tableName = ModelMap.getMappingModel(model.getClass()).getTableName();
 		Map<MappingColumn, Object> columnMap = this.getMappingColumnValues(model, INSERT);
-		String columnStr = BLANK;
-		String valueStr = BLANK;
+		String columnStr = Base.BLANK;
+		String valueStr = Base.BLANK;
 		List<Object> params = new ArrayList<Object>();
 		MappingColumn mappingColumn;
 		for (Map.Entry<MappingColumn, Object> entry : columnMap.entrySet()) {
@@ -311,8 +309,8 @@ public class XJdbcTemplate {
 	public <T extends BaseObject> int update(T model) {
 		String tableName = ModelMap.getMappingModel(model.getClass()).getTableName();
 		Map<MappingColumn, Object> columnMap = this.getMappingColumnValues(model, UPDATE);
-		String columnStr = BLANK;
-		String whereStr = BLANK;
+		String columnStr = Base.BLANK;
+		String whereStr = Base.BLANK;
 		List<Object> columnParams = new ArrayList<Object>();
 		List<Object> whereParams = new ArrayList<Object>();
 		MappingColumn mappingColumn;
@@ -351,8 +349,8 @@ public class XJdbcTemplate {
 		String tableName = ModelMap.getMappingModel(modelSet.getClass()).getTableName();
 		Map<MappingColumn, Object> setColumnMap = this.getMappingColumnValues(modelSet, UPDATE);
 		Map<MappingColumn, Object> whereColumnMap = this.getMappingColumnValues(modelWhere, SELECT_BLANK);
-		String columnStr = BLANK;
-		String whereStr = BLANK;
+		String columnStr = Base.BLANK;
+		String whereStr = Base.BLANK;
 		List<Object> params = new ArrayList<Object>();
 		MappingColumn mappingColumn;
 		for (Map.Entry<MappingColumn, Object> entry : setColumnMap.entrySet()) {
@@ -391,7 +389,7 @@ public class XJdbcTemplate {
 	public <T extends BaseObject> int delete(T model) {
 		String tableName = ModelMap.getMappingModel(model.getClass()).getTableName();
 		Map<MappingColumn, Object> columnMap = this.getMappingColumnValues(model, DELETE);
-		String whereStr = BLANK;
+		String whereStr = Base.BLANK;
 		List<Object> params = new ArrayList<Object>();
 		MappingColumn mappingColumn;
 		for (Map.Entry<MappingColumn, Object> entry : columnMap.entrySet()) {
@@ -512,7 +510,7 @@ public class XJdbcTemplate {
                             BeanUtils.populate(fieldInstance, valueMap);
                             valueMap.put(mappingFieldModel.getFieldName(), fieldInstance);
 
-                            upperSql = upperSql.replaceFirst(tableName, BLANK);
+                            upperSql = upperSql.replaceFirst(tableName, Base.BLANK);
                             if (list != null) {
                                 list.add(mappingFieldModel);
                             }
@@ -550,7 +548,7 @@ public class XJdbcTemplate {
 					if (mappingField.getColumnPkType().equals(AUTO)) {
 						id = Base.getUid(mappingField.getColumnLength());
 					} else if (mappingField.getColumnPkType().equals(SEQ)) {
-						id = this.getSeqNextval(mappingField.getColumnPkSeq()) + BLANK;
+						id = this.getSeqNextval(mappingField.getColumnPkSeq()) + Base.BLANK;
 					} else {
 						throw new RuntimeException(NO_PK_TYPE);
 					}
@@ -595,7 +593,7 @@ public class XJdbcTemplate {
 							}
 						}
 					}
-					if (fieldValue == null || fieldValue.equals(BLANK)) {
+					if (fieldValue == null || fieldValue.equals(Base.BLANK)) {
 						if (flag.equals(INSERT) || flag.equals(UPDATE)) {
 							String columnDefaultValue = mappingField.getColumnDefaultValue();
 							if (columnDefaultValue.length() > 0) {
@@ -637,7 +635,7 @@ public class XJdbcTemplate {
 	private void logParams(final Object[] params) {
 		if (params != null && params.length > 0) {
 			for (Object obj : params) {
-				logger.info(obj);
+				logger.info(Base.BLANK, obj);
 			}
 		}
 	}
