@@ -3,11 +3,14 @@ package com.x.framework.service;
 import com.x.framework.Base;
 import com.x.framework.dao.XJdbcTemplate;
 import com.x.framework.model.BaseObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public abstract class BaseService extends Base {
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private XJdbcTemplate xJdbcTemplate;
 

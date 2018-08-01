@@ -2,6 +2,8 @@ package com.x.framework.dao;
 
 import com.x.framework.Base;
 import com.x.framework.model.BaseObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -10,6 +12,7 @@ import java.util.List;
 
 @Repository
 public abstract class BaseDao extends Base {
+	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private XJdbcTemplate xJdbcTemplate;
 
