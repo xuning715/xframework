@@ -72,6 +72,7 @@ public class XJdbcTemplate {
 	private static final String ZERO_DOT_ZERO = "0.0";
 	private static final String MODEL_PARAM_IS_NULL = "models参数为空";
 	private static final String NO_PK_TYPE = "没有指定主键生成方式";
+	private static final String PARAM = "param={}";
 
 	private JdbcTemplate jdbcTemplate;
 
@@ -632,11 +633,20 @@ public class XJdbcTemplate {
 	 * @param params
 	 *            Object[]
 	 */
-	private void logParams(final Object[] params) {
-		if (params != null && params.length > 0) {
+	public void logParams(final Object[] params) {
+		if (params != null) {
 			for (Object obj : params) {
-				logger.info(Base.BLANK, obj);
+				logger.info(PARAM, obj);
 			}
 		}
+	}
+
+	public static void main(String[] arg){
+		Object[] params = new Object[3];
+		params[0] = 1;
+		params[1] = "222www";
+		params[2] = new java.util.Date();
+		XJdbcTemplate xJdbcTemplate = new XJdbcTemplate();
+		xJdbcTemplate.logParams(params);
 	}
 }
