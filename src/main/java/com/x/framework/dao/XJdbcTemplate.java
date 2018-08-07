@@ -635,8 +635,8 @@ public class XJdbcTemplate {
 	 */
 	public void logParams(final Object[] params) {
 		if (params != null) {
-			for (Object obj : params) {
-				logger.info(PARAM, obj);
+			for (Object param : params) {
+				logger.info(PARAM, param);
 			}
 		}
 	}
