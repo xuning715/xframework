@@ -34,7 +34,7 @@ public abstract class Base {
      * @param str String
      * @return boolean
      */
-    public boolean isString(String str) {
+    public static boolean isString(String str) {
         if (str != null && str.replaceAll(SPACE, BLANK).length() > 0) {
             return true;
         } else {
@@ -54,7 +54,7 @@ public abstract class Base {
         }
     }
 
-    public boolean isNotNull(Object obj) {
+    public static boolean isNotNull(Object obj) {
         if (obj != null) {
             if (obj.toString().length() > 0) {
                 return true;
@@ -69,7 +69,7 @@ public abstract class Base {
      * @param str String
      * @return String
      */
-    public String replaceBlank(String str) {
+    public static String replaceBlank(String str) {
         if (str != null) {
             str = str.replaceAll(SPACE, BLANK);
         }
@@ -111,7 +111,7 @@ public abstract class Base {
      * @param formatType String
      * @return double
      */
-    public double formatDouble(Double value, String formatType) {
+    public static double formatDouble(Double value, String formatType) {
         DecimalFormat format = new DecimalFormat(formatType);
         return Double.parseDouble(format.format(value));
     }
@@ -123,7 +123,7 @@ public abstract class Base {
      * @param formatType String
      * @return float
      */
-    public float formatFloat(Float value, String formatType) {
+    public static float formatFloat(Float value, String formatType) {
         DecimalFormat format = new DecimalFormat(formatType);
         return Float.parseFloat(format.format(value));
     }
@@ -135,7 +135,7 @@ public abstract class Base {
      * @param pattern String
      * @return Date
      */
-    public Date getDate(String str, String pattern) {
+    public static Date getDate(String str, String pattern) {
         Date date = null;
         if (isString(str)) {
             try {
@@ -156,7 +156,7 @@ public abstract class Base {
      * @param pattern String
      * @return Date
      */
-    public String getDate(Date date, String pattern) {
+    public static String getDate(Date date, String pattern) {
         if (date != null) {
             SimpleDateFormat sdf = new SimpleDateFormat(pattern);
             return sdf.format(date);
@@ -170,7 +170,7 @@ public abstract class Base {
      *
      * @return int
      */
-    public int getDayOfWeek() {
+    public static int getDayOfWeek() {
         Calendar c = Calendar.getInstance();
         Date date = new Date();
         c.setTime(date);
@@ -198,14 +198,14 @@ public abstract class Base {
      * @param increment int
      * @return String
      */
-    public Date getDate(int increment) {
+    public static Date getDate(int increment) {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DAY_OF_MONTH, increment);
         Date date = c.getTime();
         return date;
     }
 
-    public Date getDate(Date date, int increment) {
+    public static Date getDate(Date date, int increment) {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         c.add(Calendar.DAY_OF_MONTH, increment);
@@ -217,7 +217,7 @@ public abstract class Base {
      *
      * @return int
      */
-    public int getCurrentHour() {
+    public static int getCurrentHour() {
         Calendar c = Calendar.getInstance();
         Date date = new Date();
         c.setTime(date);
