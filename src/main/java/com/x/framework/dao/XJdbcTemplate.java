@@ -99,17 +99,24 @@ public class XJdbcTemplate {
 	}
 
 	public <T> Object queryForObject(String sql, RowMapper<T> mapper) {
-		logger.info(sql);
-		return this.jdbcTemplate.queryForObject(sql, mapper);
+		List<T> list = this.queryForList(sql, mapper);
+		T t = null;
+		if (list != null && list.size() > 0) {
+			t = list.get(0);
+		}
+		return t;
 	}
 
     public <T> Object queryForObject(String sql, RowMapper<T> mapper, Object[] params) {
         if (params == null || params.length == 0) {
             return this.queryForObject(sql, mapper);
         } else {
-            logger.info(sql);
-            this.logParams(params);
-            return this.jdbcTemplate.queryForObject(sql, mapper, params);
+			List<T> list = this.queryForList(sql, mapper, params);
+			T t = null;
+			if (list != null && list.size() > 0) {
+				t = list.get(0);
+			}
+			return t;
         }
     }
 
@@ -127,7 +134,6 @@ public class XJdbcTemplate {
     }
 
     public <T extends BaseObject> Object queryForObject(String sql, Class<T> clazz, Object params[]) throws Exception {
-        this.logParams(params);
         RowMapper<T> mapper = this.resultSetToModelRowMapper(sql, clazz);
         return this.queryForObject(sql, mapper, params);
     }
@@ -142,17 +148,15 @@ public class XJdbcTemplate {
 	 * @return List
 	 */
 	public <T> List<T> queryForList(String sql, RowMapper<T> mapper) {
-		logger.info(sql);
-		return this.jdbcTemplate.query(sql, mapper);
+		List params = new ArrayList(2);
+		return this.queryForListPage(sql, mapper, params, 1, 1000);
 	}
 
 	public <T> List<T> queryForList(String sql, RowMapper<T> mapper, Object[] params) {
 		if (params == null || params.length == 0) {
 			return this.queryForList(sql, mapper);
 		} else {
-			logger.info(sql);
-			this.logParams(params);
-			return this.jdbcTemplate.query(sql, mapper, params);
+			return this.queryForListPage(sql, mapper, params, 1, 1000);
 		}
 	}
 
@@ -166,7 +170,7 @@ public class XJdbcTemplate {
 
     public <T> List<T> queryForList(String sql, RowMapper<T> mapper, List<Object> params, BaseObject baseObject) {
         if (baseObject == null || baseObject.getPageIndex() == null || baseObject.getPageSize() == null) {
-            return this.queryForList(sql, mapper, params);
+            return this.queryForListPage(sql, mapper, params, 1, 1000);
         } else {
             return this.queryForListPage(sql, mapper, params, baseObject.getPageIndex(), baseObject.getPageSize());
         }
@@ -193,34 +197,43 @@ public class XJdbcTemplate {
     }
 
     private <T> List<T> queryForListPage(String sql, RowMapper<T> mapper, List<Object> params, int pageIndex, int pageSize) {
-		if (this.dataBaseType.equals(DATABASE_TYPE_MYSQL)) {
-			return this.queryForListPageMysql(sql, mapper, params, pageIndex, pageSize);
-		} else if (this.dataBaseType.equals(DATABASE_TYPE_ORACLE)) {
-			return this.queryForListPageOracle(sql, mapper, params, pageIndex, pageSize);
-		} else {
-			throw new RuntimeException("DataBaseType is not ORACLE or MYSQL");
-		}
-	}
+	    return this.queryForListPage(sql, mapper, params.toArray(), pageIndex, pageSize);
+    }
 
-	private <T> List<T> queryForListPageOracle(String sql, RowMapper<T> mapper, List<Object> params, int pageIndex, int pageSize) {
-		sql = SELECT_PAGE_BEGIN_ORACLE + sql + SELECT_PAGE_END_ORACLE;
-		params.add((pageIndex - 1) * pageSize);
-		params.add(pageIndex * pageSize);
-        return this.queryForList(sql, mapper, params);
-	}
+    private <T> List<T> queryForListPage(String sql, RowMapper<T> mapper, Object[] params, int pageIndex, int pageSize) {
+	    int paramsLength = params.length;
+	    Object[] paramArray = new Object[paramsLength + 2];
+	    System.arraycopy(params, 0, paramArray, 0, paramsLength);
+        if (this.dataBaseType.equals(DATABASE_TYPE_MYSQL)) {
+            return this.queryForListPageMysql(sql, mapper, paramArray, pageIndex, pageSize);
+        } else if (this.dataBaseType.equals(DATABASE_TYPE_ORACLE)) {
+            return this.queryForListPageOracle(sql, mapper, paramArray, pageIndex, pageSize);
+        } else {
+            throw new RuntimeException("DataBaseType is not ORACLE or MYSQL");
+        }
+    }
 
-	private <T> List<T> queryForListPageMysql(String sql, RowMapper<T> mapper, List<Object> params, int pageIndex, int pageSize) {
+    private <T> List<T> queryForListPageMysql(String sql, RowMapper<T> mapper, Object[] params, int pageIndex, int pageSize) {
 		sql = SELECT_PAGE_BEGIN_MYSQL + sql + SELECT_PAGE_END_MYSQL;
-		params.add((pageIndex - 1) * pageSize);
-		params.add(pageSize);
-		return this.queryForList(sql, mapper, params);
+		params[params.length - 2] = (pageIndex - 1) * pageSize;
+		params[params.length - 1] = pageSize;
+		this.logParams(sql, params);
+		return this.jdbcTemplate.query(sql, mapper, params);
+	}
+
+	private <T> List<T> queryForListPageOracle(String sql, RowMapper<T> mapper, Object[] params, int pageIndex, int pageSize) {
+		sql = SELECT_PAGE_BEGIN_ORACLE + sql + SELECT_PAGE_END_ORACLE;
+        params[params.length - 2] = (pageIndex - 1) * pageSize;
+        params[params.length - 1] = pageIndex * pageSize;
+		this.logParams(sql, params);
+		return this.jdbcTemplate.query(sql, mapper, params);
 	}
 
     public int queryForInt(String sql, Object... params) {
         RowMapper<Integer> mapper = new BeanPropertyRowMapper<Integer>() {
             @Override
             public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return rs.getInt(1);
+				return rs.getInt(1);
             }
         };
         List<Integer> list;
@@ -229,11 +242,11 @@ public class XJdbcTemplate {
         } else {
             list = this.queryForList(sql, mapper, params);
         }
-        if (list != null && list.size() > 0 && list.get(0) != null) {
-            return Integer.parseInt(list.get(0).toString());
-        } else {
-            return 0;
+        int num = 0;
+        if (list != null && list.size() > 0) {
+            num = list.get(0);
         }
+		return num;
     }
 
     public int queryForInt(String sql, List<Object> params) {
@@ -264,11 +277,10 @@ public class XJdbcTemplate {
 	 * @return int
 	 */
 	public int execute(String sql, Object... params) {
-		logger.info(sql);
+		this.logParams(sql, params);
 		if (params == null || params.length == 0) {
 			return this.jdbcTemplate.update(sql);
 		} else {
-			this.logParams(params);
 			return this.jdbcTemplate.update(sql, params);
 		}
 	}
@@ -438,7 +450,7 @@ public class XJdbcTemplate {
             int inLen = inParam.length;
             int outLen = outParams.length;
             int i;
-            logParams(inParams);
+			this.logParams(sql, inParams);
             for (i = 0; i < inLen; i++) {
                 cs.setObject(i + 1, inParam[i], inTypes[i]);
             }
@@ -634,7 +646,8 @@ public class XJdbcTemplate {
 	 * @param params
 	 *            Object[]
 	 */
-	public void logParams(final Object[] params) {
+	public void logParams(String sql, final Object[] params) {
+		logger.info(sql);
 		if (params != null) {
 			int i = 1;
 			for (Object param : params) {
@@ -643,12 +656,4 @@ public class XJdbcTemplate {
 		}
 	}
 
-	public static void main(String[] arg){
-		Object[] params = new Object[3];
-		params[0] = 1;
-		params[1] = "222www";
-		params[2] = new java.util.Date();
-		XJdbcTemplate xJdbcTemplate = new XJdbcTemplate();
-		xJdbcTemplate.logParams(params);
-	}
 }
