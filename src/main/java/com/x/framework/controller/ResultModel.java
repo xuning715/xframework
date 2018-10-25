@@ -12,7 +12,7 @@ public class ResultModel implements Serializable {
 
 	private int code = 1;//响应码
 	
-	private String errorCode;//错误代码
+	private Integer errorCode;//错误代码
 
 	private Object result;//结果集
 
@@ -42,7 +42,7 @@ public class ResultModel implements Serializable {
 		this.result = result;
 	}
 
-	public ResultModel(int code, String errorCode, String msg) {
+	public ResultModel(int code, Integer errorCode, String msg) {
 		this.code = code;
 		this.errorCode = errorCode;
 		this.msg = msg;
@@ -56,11 +56,11 @@ public class ResultModel implements Serializable {
 		this.code = code;
 	}
 
-	public String getErrorCode() {
+	public Integer getErrorCode() {
 		return errorCode;
 	}
 
-	public void setErrorCode(String errorCode) {
+	public void setErrorCode(Integer errorCode) {
 		this.errorCode = errorCode;
 	}
 

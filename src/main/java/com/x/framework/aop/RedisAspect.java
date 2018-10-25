@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.x.framework.Base;
 import com.x.framework.annotation.MappingTable;
 import com.x.framework.annotation.NotKey;
-import com.x.framework.model.BaseObject;
+import com.x.framework.model.BaseModel;
 import com.x.framework.model.MappingModel;
 import com.x.framework.model.ModelMap;
 import com.x.framework.redis.XRedisTemplate;
@@ -58,8 +58,8 @@ public class RedisAspect {
             argJson = arg == null ? Base.BLANK : JSON.toJSONString(arg);
             if (paramAnnotations[i].length == 0 || !paramAnnotations[i][0].annotationType().equals(NotKey.class)) {
                 if (i == 0) {
-                    if (!(BaseObject.class.isInstance(arg))) {
-                        throw new Exception("arg0 is not instance of BaseObject");
+                    if (!(BaseModel.class.isInstance(arg))) {
+                        throw new Exception("arg0 is not instance of BaseModel");
                     }
                     mappingTable = arg.getClass().getAnnotation(MappingTable.class);
                     if (mappingTable == null) {
@@ -84,8 +84,8 @@ public class RedisAspect {
         return value;
     }
 
-    public void afterReturnRedisRemove(BaseObject arg) {
-        MappingModel<? extends BaseObject> mappingModel = ModelMap.getMappingModel(arg.getClass());
+    public void afterReturnRedisRemove(BaseModel arg) {
+        MappingModel<? extends BaseModel> mappingModel = ModelMap.getMappingModel(arg.getClass());
         // 删除前缀的所有集合
         System.out.println("====afterReturnRedisRemove====================className===" + arg.getClass());
         Map<String, String> tableNameMap = mappingModel.getTableModelMap();
@@ -144,7 +144,7 @@ public class RedisAspect {
     // throw new BusinessException(e.getMessage(), e);
     // }
 
-    public void afterReturnXxx(BaseObject arg, List<BaseObject> list) {
+    public void afterReturnXxx(BaseModel arg, List<BaseModel> list) {
         MappingTable mappingTable = arg.getClass().getAnnotation(MappingTable.class);
         String tableName = mappingTable.tableName().toUpperCase();
         System.out.println("====afterReturnRedisSave====================tableName===" + tableName);

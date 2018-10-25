@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.x.framework.Base;
-import com.x.framework.model.BaseObject;
+import com.x.framework.model.BaseModel;
 import org.apache.commons.jexl2.Expression;
 import org.apache.commons.jexl2.JexlContext;
 import org.apache.commons.jexl2.JexlEngine;
@@ -21,7 +21,7 @@ import javax.script.ScriptEngineManager;
 public class RuleEngine {
     private final static String js = "js";
 
-    public static boolean validateRule(BaseObject obj, List<String> rules) throws Exception {
+    public static boolean validateRule(BaseModel obj, List<String> rules) throws Exception {
         Map<String, Object> map = transBean2Map(obj);
         return validateRule(map, rules);
     }
@@ -70,7 +70,7 @@ public class RuleEngine {
         }
     }
 
-    private static Map<String, Object> transBean2Map(BaseObject obj) throws Exception {
+    private static Map<String, Object> transBean2Map(BaseModel obj) throws Exception {
         if (obj == null) {
             return null;
         }

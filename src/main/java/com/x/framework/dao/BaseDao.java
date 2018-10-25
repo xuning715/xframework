@@ -1,7 +1,7 @@
 package com.x.framework.dao;
 
 import com.x.framework.Base;
-import com.x.framework.model.BaseObject;
+import com.x.framework.model.BaseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,15 +36,15 @@ public abstract class BaseDao extends Base {
 		return this.xJdbcTemplate.queryForObject(sql, mapper, params);
 	}
 
-	public <T extends BaseObject> Object queryForObject(String sql, Class<T> clazz) throws Exception {
+	public <T extends BaseModel> Object queryForObject(String sql, Class<T> clazz) throws Exception {
 		return this.xJdbcTemplate.queryForObject(sql, clazz);
 	}
 
-	public <T extends BaseObject> Object queryForObject(String sql, Class<T> clazz, Object params[]) throws Exception {
+	public <T extends BaseModel> Object queryForObject(String sql, Class<T> clazz, Object params[]) throws Exception {
 		return this.xJdbcTemplate.queryForObject(sql, clazz, params);
 	}
 
-	public <T extends BaseObject> Object queryForObject(String sql, Class<T> clazz, List<Object> params) throws Exception {
+	public <T extends BaseModel> Object queryForObject(String sql, Class<T> clazz, List<Object> params) throws Exception {
 		return this.xJdbcTemplate.queryForObject(sql, clazz, params);
 	}
 
@@ -64,24 +64,24 @@ public abstract class BaseDao extends Base {
 		return this.xJdbcTemplate.queryForList(sql, mapper, params);
 	}
 
-	public <T> List<T> queryForList(String sql, RowMapper<T> mapper, List<Object> params, BaseObject baseObject) {
-		return this.xJdbcTemplate.queryForList(sql, mapper, params, baseObject);
+	public <T> List<T> queryForList(String sql, RowMapper<T> mapper, List<Object> params, BaseModel BaseModel) {
+		return this.xJdbcTemplate.queryForList(sql, mapper, params, BaseModel);
 	}
 
-	public <T extends BaseObject> List<T> queryForList(String sql, Class<T> clazz) throws Exception {
+	public <T extends BaseModel> List<T> queryForList(String sql, Class<T> clazz) throws Exception {
 		return this.xJdbcTemplate.queryForList(sql, clazz);
 	}
 
-	public <T extends BaseObject> List<T> queryForList(String sql, Class<T> clazz, Object[] params) throws Exception {
+	public <T extends BaseModel> List<T> queryForList(String sql, Class<T> clazz, Object[] params) throws Exception {
 		return this.xJdbcTemplate.queryForList(sql, clazz, params);
 	}
 
-	public <T extends BaseObject> List<T> queryForList(String sql, Class<T> clazz, List<Object> params) throws Exception {
+	public <T extends BaseModel> List<T> queryForList(String sql, Class<T> clazz, List<Object> params) throws Exception {
 		return this.xJdbcTemplate.queryForList(sql, clazz, params);
 	}
 
-	public <T extends BaseObject> List<T> queryForList(String sql, Class<T> clazz, List<Object> params, BaseObject baseObject) throws Exception {
-		return this.xJdbcTemplate.queryForList(sql, clazz, params, baseObject);
+	public <T extends BaseModel> List<T> queryForList(String sql, Class<T> clazz, List<Object> params, BaseModel BaseModel) throws Exception {
+		return this.xJdbcTemplate.queryForList(sql, clazz, params, BaseModel);
 	}
 
 	public int queryForInt(String sql, Object... params) {
@@ -117,19 +117,19 @@ public abstract class BaseDao extends Base {
 		return this.xJdbcTemplate.execute(sql, params);
 	}
 
-	public <T extends BaseObject> T insert(T model) throws Exception {
+	public <T extends BaseModel> T insert(T model) throws Exception {
 		return this.xJdbcTemplate.insert(model);
 	}
 
-	public <T extends BaseObject> int update(T model) {
+	public <T extends BaseModel> int update(T model) {
 		return this.xJdbcTemplate.update(model);
 	}
 
-	public <T extends BaseObject> int update(T modelSet, T modelWhere) {
+	public <T extends BaseModel> int update(T modelSet, T modelWhere) {
 		return this.xJdbcTemplate.update(modelSet, modelWhere);
 	}
 
-	public <T extends BaseObject> int delete(T model) {
+	public <T extends BaseModel> int delete(T model) {
 		return this.xJdbcTemplate.delete(model);
 	}
 
@@ -158,7 +158,7 @@ public abstract class BaseDao extends Base {
 	 * @return RowMapper
 	 * @throws Exception
 	 */
-	public <T extends BaseObject> RowMapper<T> resultSetToModelRowMapper(final String sql, final Class<T> modelClass) throws Exception {
+	public <T extends BaseModel> RowMapper<T> resultSetToModelRowMapper(final String sql, final Class<T> modelClass) throws Exception {
 		return this.xJdbcTemplate.resultSetToModelRowMapper(sql, modelClass);
 	}
 

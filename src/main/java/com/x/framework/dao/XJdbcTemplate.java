@@ -1,7 +1,7 @@
 package com.x.framework.dao;
 
 import com.x.framework.annotation.MappingColumn;
-import com.x.framework.model.BaseObject;
+import com.x.framework.model.BaseModel;
 import com.x.framework.model.MappingField;
 import com.x.framework.model.MappingModel;
 import com.x.framework.model.ModelMap;
@@ -128,17 +128,17 @@ public class XJdbcTemplate {
         }
     }
 
-    public <T extends BaseObject> Object queryForObject(String sql, Class<T> clazz) throws Exception {
+    public <T extends BaseModel> Object queryForObject(String sql, Class<T> clazz) throws Exception {
         RowMapper<T> mapper = this.resultSetToModelRowMapper(sql, clazz);
         return this.queryForObject(sql, mapper);
     }
 
-    public <T extends BaseObject> Object queryForObject(String sql, Class<T> clazz, Object params[]) throws Exception {
+    public <T extends BaseModel> Object queryForObject(String sql, Class<T> clazz, Object params[]) throws Exception {
         RowMapper<T> mapper = this.resultSetToModelRowMapper(sql, clazz);
         return this.queryForObject(sql, mapper, params);
     }
 
-    public <T extends BaseObject> Object queryForObject(String sql, Class<T> clazz, List<Object> params) throws Exception {
+    public <T extends BaseModel> Object queryForObject(String sql, Class<T> clazz, List<Object> params) throws Exception {
         RowMapper<T> mapper = this.resultSetToModelRowMapper(sql, clazz);
         return this.queryForObject(sql, mapper, params);
     }
@@ -168,32 +168,32 @@ public class XJdbcTemplate {
 		}
 	}
 
-    public <T> List<T> queryForList(String sql, RowMapper<T> mapper, List<Object> params, BaseObject baseObject) {
-        if (baseObject == null || baseObject.getPageIndex() == null || baseObject.getPageSize() == null) {
+    public <T> List<T> queryForList(String sql, RowMapper<T> mapper, List<Object> params, BaseModel BaseModel) {
+        if (BaseModel == null || BaseModel.getPageIndex() == null || BaseModel.getPageSize() == null) {
             return this.queryForListPage(sql, mapper, params, 1, 1000);
         } else {
-            return this.queryForListPage(sql, mapper, params, baseObject.getPageIndex(), baseObject.getPageSize());
+            return this.queryForListPage(sql, mapper, params, BaseModel.getPageIndex(), BaseModel.getPageSize());
         }
     }
 
-    public <T extends BaseObject> List<T> queryForList(String sql, Class<T> clazz) throws Exception {
+    public <T extends BaseModel> List<T> queryForList(String sql, Class<T> clazz) throws Exception {
 		RowMapper<T> mapper = this.resultSetToModelRowMapper(sql, clazz);
 		return this.queryForList(sql, mapper);
 	}
 
-	public <T extends BaseObject> List<T> queryForList(String sql, Class<T> clazz, Object[] params) throws Exception {
+	public <T extends BaseModel> List<T> queryForList(String sql, Class<T> clazz, Object[] params) throws Exception {
 		RowMapper<T> mapper = this.resultSetToModelRowMapper(sql, clazz);
 		return this.queryForList(sql, mapper, params);
 	}
 
-	public <T extends BaseObject> List<T> queryForList(String sql, Class<T> clazz, List<Object> params) throws Exception {
+	public <T extends BaseModel> List<T> queryForList(String sql, Class<T> clazz, List<Object> params) throws Exception {
 		RowMapper<T> mapper = this.resultSetToModelRowMapper(sql, clazz);
 		return this.queryForList(sql, mapper, params);
 	}
 
-    public <T extends BaseObject> List<T> queryForList(String sql, Class<T> clazz, List<Object> params, BaseObject baseObject) throws Exception {
+    public <T extends BaseModel> List<T> queryForList(String sql, Class<T> clazz, List<Object> params, BaseModel BaseModel) throws Exception {
         RowMapper<T> mapper = this.resultSetToModelRowMapper(sql, clazz);
-        return this.queryForList(sql, mapper, params, baseObject);
+        return this.queryForList(sql, mapper, params, BaseModel);
     }
 
     private <T> List<T> queryForListPage(String sql, RowMapper<T> mapper, List<Object> params, int pageIndex, int pageSize) {
@@ -293,7 +293,7 @@ public class XJdbcTemplate {
 		}
 	}
 
-	public <T extends BaseObject> T insert(T model) throws Exception {
+	public <T extends BaseModel> T insert(T model) throws Exception {
 		model = this.setModelPkFieldValue(model);
 		String tableName = ModelMap.getMappingModel(model.getClass()).getTableName();
 		Map<MappingColumn, Object> columnMap = this.getMappingColumnValues(model, INSERT);
@@ -320,7 +320,7 @@ public class XJdbcTemplate {
 		return model;
 	}
 
-	public <T extends BaseObject> int update(T model) {
+	public <T extends BaseModel> int update(T model) {
 		String tableName = ModelMap.getMappingModel(model.getClass()).getTableName();
 		Map<MappingColumn, Object> columnMap = this.getMappingColumnValues(model, UPDATE);
 		String columnStr = Base.BLANK;
@@ -359,7 +359,7 @@ public class XJdbcTemplate {
 		}
 	}
 
-	public <T extends BaseObject> int update(T modelSet, T modelWhere) {
+	public <T extends BaseModel> int update(T modelSet, T modelWhere) {
 		String tableName = ModelMap.getMappingModel(modelSet.getClass()).getTableName();
 		Map<MappingColumn, Object> setColumnMap = this.getMappingColumnValues(modelSet, UPDATE);
 		Map<MappingColumn, Object> whereColumnMap = this.getMappingColumnValues(modelWhere, SELECT_BLANK);
@@ -400,7 +400,7 @@ public class XJdbcTemplate {
 		}
 	}
 
-	public <T extends BaseObject> int delete(T model) {
+	public <T extends BaseModel> int delete(T model) {
 		String tableName = ModelMap.getMappingModel(model.getClass()).getTableName();
 		Map<MappingColumn, Object> columnMap = this.getMappingColumnValues(model, DELETE);
 		String whereStr = Base.BLANK;
@@ -474,7 +474,7 @@ public class XJdbcTemplate {
      * @return RowMapper
      * @throws SQLException
      */
-    public <T extends BaseObject> RowMapper<T> resultSetToModelRowMapper(final String sql, final Class<T> modelClass) throws Exception {
+    public <T extends BaseModel> RowMapper<T> resultSetToModelRowMapper(final String sql, final Class<T> modelClass) throws Exception {
         RowMapper<T> mapper = new BeanPropertyRowMapper<T>() {
             @Override
 			public T mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -514,13 +514,11 @@ public class XJdbcTemplate {
                         mappingFieldModelList = mappingModel.getMappingModelList();
                         list = new ArrayList<MappingModel>();
                     }
-                    Class<BaseObject> fieldModelClass;
                     String tableName;
                     for (MappingModel mappingFieldModel : mappingFieldModelList) {
                         tableName = mappingFieldModel.getTableName() + SPACE;
                         if (upperSql.contains(tableName)) {
-                            fieldModelClass = mappingFieldModel.getFieldType();
-                            BaseObject fieldInstance = fieldModelClass.newInstance();
+                            BaseModel fieldInstance = (BaseModel) mappingFieldModel.getFieldType().newInstance();
                             BeanUtils.populate(fieldInstance, valueMap);
                             valueMap.put(mappingFieldModel.getFieldName(), fieldInstance);
 
@@ -548,10 +546,10 @@ public class XJdbcTemplate {
 	 * 设置model的主键值
 	 *
 	 * @param model
-	 *            BaseObject
-	 * @return BaseObject
+	 *            BaseModel
+	 * @return BaseModel
 	 */
-	private  <T extends BaseObject> T setModelPkFieldValue(T model) throws Exception {
+	private  <T extends BaseModel> T setModelPkFieldValue(T model) throws Exception {
 		List<MappingField> mappingFieldList = ModelMap.getMappingModel(model.getClass()).getMappingFieldList();
 		for (MappingField mappingField : mappingFieldList) {
 			if (mappingField.getColumnPk()) {
@@ -588,7 +586,7 @@ public class XJdbcTemplate {
 	 *            BaseInterface
 	 * @return Map
 	 */
-	private <T extends BaseObject> Map<MappingColumn, Object> getMappingColumnValues(T model, String flag) {
+	private <T extends BaseModel> Map<MappingColumn, Object> getMappingColumnValues(T model, String flag) {
 		Map<MappingColumn, Object> columnMap = new LinkedHashMap<MappingColumn, Object>();
 		try {
 			List<MappingField> mappingFieldList = ModelMap.getMappingModel(model.getClass()).getMappingFieldList();
@@ -599,8 +597,11 @@ public class XJdbcTemplate {
 					field = mappingField.getField();
 					Object fieldValue = field.get(model);
 					if (fieldValue != null) {
-						if (fieldClassTypeName.equals(INT) || fieldClassTypeName.equals(DOUBLE) || fieldClassTypeName.equals(FLOAT) || fieldClassTypeName.equals(LONG)
-								|| fieldClassTypeName.equals(SHORT)) {
+						if (fieldClassTypeName.equals(INT) ||
+								fieldClassTypeName.equals(DOUBLE) ||
+								fieldClassTypeName.equals(FLOAT) ||
+								fieldClassTypeName.equals(LONG) ||
+								fieldClassTypeName.equals(SHORT)) {
 							fieldValue = fieldValue.toString();
 							if (fieldValue.equals(ZERO) || fieldValue.equals(ZERO_DOT_ZERO)) {
 								fieldValue = null;

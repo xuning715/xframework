@@ -53,7 +53,7 @@ public abstract class BaseTemplate extends Base {
 	 *             params.size() == 0) { return this.execute(key, sql); } else {
 	 *             return xJdbcTemplate.execute(key, sql, params.toArray()); } }
 	 * 
-	 *             public <T extends BaseObject> T insert(String key, T model)
+	 *             public <T extends BaseModel> T insert(String key, T model)
 	 *             throws Exception { model = this.setModelPkFieldValue(model);
 	 *             String tableName =
 	 *             ModelMap.getMappingModel(model.getClass()).getTableName();
@@ -76,7 +76,7 @@ public abstract class BaseTemplate extends Base {
 	 *             valueStr + RIGHT_BRACKETS; this.execute(key, sql, params);
 	 *             return model; }
 	 * 
-	 *             public <T extends BaseObject> int update(String key, T model)
+	 *             public <T extends BaseModel> int update(String key, T model)
 	 *             throws Exception { if (model == null) { throw new
 	 *             RuntimeException(MODEL_PARAM_IS_NULL); } String tableName =
 	 *             ModelMap.getMappingModel(model.getClass()).getTableName();
@@ -104,7 +104,7 @@ public abstract class BaseTemplate extends Base {
 	 *             tableName + BLANK_SET_BLANK + columnStr + whereStr; return
 	 *             this.execute(key, sql, columnParams); }
 	 * 
-	 *             public <T extends BaseObject> int update(String key, T
+	 *             public <T extends BaseModel> int update(String key, T
 	 *             modelSet, T modelWhere) throws Exception { if (modelSet ==
 	 *             null) { throw new RuntimeException(MODEL_PARAM_IS_NULL); }
 	 *             String tableName =
@@ -135,7 +135,7 @@ public abstract class BaseTemplate extends Base {
 	 *             UPDATE_BLANK + tableName + BLANK_SET_BLANK + columnStr +
 	 *             whereStr; return this.execute(key, sql, params); }
 	 * 
-	 *             public <T extends BaseObject> int delete(String key, T model)
+	 *             public <T extends BaseModel> int delete(String key, T model)
 	 *             throws Exception { String tableName =
 	 *             ModelMap.getMappingModel(model.getClass()).getTableName();
 	 *             Map<MappingColumn, Object> columnMap =

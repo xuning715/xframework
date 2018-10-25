@@ -16,7 +16,7 @@ public class ModelMap {
 
 	}
 
-	public static <T extends BaseObject> MappingModel<T> getMappingModel(Class<T> clazz) {
+	public static <T extends BaseModel> MappingModel<T> getMappingModel(Class<T> clazz) {
 		MappingModel mappingModel = mappingModelMap.get(clazz);
 		if (mappingModel == null) {
 			List<MappingModel> mappingModelList = new ArrayList<MappingModel>();
@@ -28,7 +28,7 @@ public class ModelMap {
 		return mappingModel;
 	}
 
-	private static <T extends BaseObject> MappingModel<T> getClassMappingModel(Class<T> clazz, List<MappingModel> mappingModelList, Map<String, String> columnFieldMap, Map<String, String> tableModelMap) {
+	private static <T extends BaseModel> MappingModel<T> getClassMappingModel(Class<T> clazz, List<MappingModel> mappingModelList, Map<String, String> columnFieldMap, Map<String, String> tableModelMap) {
 		MappingTable mappingTable = clazz.getAnnotation(MappingTable.class);
 		String tableName = mappingTable.tableName().toUpperCase();
 		MappingModel mappingModel = new MappingModel();
@@ -65,7 +65,7 @@ public class ModelMap {
 				if (!tableModelMap.containsKey(key)) {
 					tableModelMap.put(key, key);
 					MappingModel mappingModelField;
-					if (BaseObject.class.isAssignableFrom(type)) {
+					if (BaseModel.class.isAssignableFrom(type)) {
 						mappingModelField = getClassMappingModel(type, mappingModelList, columnFieldMap, tableModelMap);
 						mappingModelField.setFieldName(fieldName);
 						mappingModelList.add(mappingModelField);

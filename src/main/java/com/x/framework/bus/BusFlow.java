@@ -3,12 +3,12 @@ package com.x.framework.bus;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import com.x.framework.model.BaseObject;
+import com.x.framework.model.BaseModel;
 import com.x.framework.service.BaseService;
 
 public class BusFlow {
     private final static String VOID = "void";
-    private final static String BUS_FLOW_EXCEPTION = "BusService required input is BaseObject";
+    private final static String BUS_FLOW_EXCEPTION = "BusService required input is BaseModel";
     private List<BusService> busServiceFlow;
 
     public List<BusService> getBusServiceFlow() {
@@ -47,8 +47,8 @@ public class BusFlow {
                         BusService busService = busServiceFlow.get(i);
                         rules = busService.getRules();
                         if (rules != null) {
-                            if (BaseObject.class.isInstance(returnValue)) {
-                                if (!RuleEngine.validateRule((BaseObject) returnValue, rules)) {
+                            if (BaseModel.class.isInstance(returnValue)) {
+                                if (!RuleEngine.validateRule((BaseModel) returnValue, rules)) {
                                     validateFlag = false;
                                 }
                             } else {

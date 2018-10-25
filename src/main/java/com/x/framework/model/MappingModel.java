@@ -5,7 +5,7 @@ import java.util.Map;
 
 import java.util.HashMap;
 
-public class MappingModel<T extends BaseObject> {
+public class MappingModel<T extends BaseModel> {
 	private String fieldName;
 	private Class<T> fieldType;
 	private String tableName;
