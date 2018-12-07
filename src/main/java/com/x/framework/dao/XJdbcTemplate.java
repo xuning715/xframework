@@ -197,7 +197,7 @@ public class XJdbcTemplate {
     }
 
     private <T> List<T> queryForListPage(String sql, RowMapper<T> mapper, List<Object> params, int pageIndex, int pageSize) {
-	    return this.queryForListPage(sql, mapper, params.toArray(), pageIndex, pageSize);
+		return this.queryForListPage(sql, mapper, params.toArray(), pageIndex, pageSize);
     }
 
     private <T> List<T> queryForListPage(String sql, RowMapper<T> mapper, Object[] params, int pageIndex, int pageSize) {
