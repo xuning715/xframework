@@ -596,18 +596,18 @@ public class XJdbcTemplate {
 					String fieldClassTypeName = mappingField.getFieldClassTypeName();
 					field = mappingField.getField();
 					Object fieldValue = field.get(model);
-					if (fieldValue != null) {
-						if (fieldClassTypeName.equals(INT) ||
-								fieldClassTypeName.equals(DOUBLE) ||
-								fieldClassTypeName.equals(FLOAT) ||
-								fieldClassTypeName.equals(LONG) ||
-								fieldClassTypeName.equals(SHORT)) {
-							fieldValue = fieldValue.toString();
-							if (fieldValue.equals(ZERO) || fieldValue.equals(ZERO_DOT_ZERO)) {
-								fieldValue = null;
-							}
-						}
-					}
+//					if (fieldValue != null) {
+//						if (fieldClassTypeName.equals(INT) ||
+//								fieldClassTypeName.equals(DOUBLE) ||
+//								fieldClassTypeName.equals(FLOAT) ||
+//								fieldClassTypeName.equals(LONG) ||
+//								fieldClassTypeName.equals(SHORT)) {
+//							fieldValue = fieldValue.toString();
+//							if (fieldValue.equals(ZERO) || fieldValue.equals(ZERO_DOT_ZERO)) {
+//								fieldValue = null;
+//							}
+//						}
+//					}
 					if (fieldValue == null || fieldValue.equals(Base.BLANK)) {
 						if (flag.equals(INSERT) || flag.equals(UPDATE)) {
 							String columnDefaultValue = mappingField.getColumnDefaultValue();
